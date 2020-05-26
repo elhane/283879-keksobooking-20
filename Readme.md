@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Елена Грачева](https://up.htmlacademy.ru/javascript/20/user/283879).
-* Наставник: [Алексей Балесный] (https://htmlacademy.ru/profile/id221665).
+* Наставник: [Алексей Балесный](https://htmlacademy.ru/profile/id221665).
 
 ---
 
