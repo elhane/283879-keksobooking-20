@@ -61,29 +61,18 @@ var getRandomLength = function (elements) {
   return elementsCopy;
 };
 
-// генерация адресов аватарок -
-// var generateAvatarsUrl = function (count) {
-//   var avatars = [];
-//   for (var i = 0; i < count; i++) {
-//     avatars.push(AVATAR_LINK + i + AVATAR_IMG_EXTENSION);
-//   }
-//   return avatars;
-// };
-
-// var userAvatars = generateAvatarsUrl(OFFER_AMOUNT);
-
 var mapBlock = document.querySelector('.map');
 var mapPins = mapBlock.querySelector('.map__pins');
 mapBlock.classList.remove('map--faded');
 
-// создание одного объявления со случайными параметрами
-var createOffer = function () {
+// создание объявления со случайными параметрами
+var createOffer = function (count) {
   var locationX = getRandomNumber(LOCATION_X_MIN + PIN_WIDTH / 2, locationXMax - PIN_WIDTH / 2);
   var locationY = getRandomNumber(LOCATION_Y_MIN, LOCATION_Y_MAX - MENU_HEIGHT);
 
   return {
     author: {
-      avatar: AVATAR_LINK + getRandomNumber(1, 8) + AVATAR_IMG_EXTENSION // getRandomElement(userAvatars)
+      avatar: AVATAR_LINK + count + AVATAR_IMG_EXTENSION
     },
     offer: {
       title: getRandomElement(OFFER_TITLES),
@@ -106,10 +95,10 @@ var createOffer = function () {
 };
 
 // генерация массива объявлений
-var generateOffers = function () {
+var generateOffers = function (count) {
   var offers = [];
-  for (var i = 0; i < OFFER_AMOUNT; i++) {
-    offers.push(createOffer());
+  for (var i = 1; i <= count; i++) {
+    offers.push(createOffer(i));
   }
   return offers;
 };
@@ -139,4 +128,4 @@ var placeOffers = function (offers) {
   mapPins.appendChild(fragment);
 };
 
-mapBlock.appendChild(placeOffers(generateOffers()));
+mapBlock.appendChild(placeOffers(generateOffers(OFFER_AMOUNT)));
