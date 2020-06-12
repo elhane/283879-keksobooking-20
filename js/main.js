@@ -33,6 +33,12 @@ var OFFER_TITLES = [
 var LOCATION_X_MIN = 0;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
+var ENTER_KEY_CODE = 13;
+
+var PALACE_PRICE = 10000;
+var HOUSE_PRICE = 5000;
+var FLAT_PRICE = 1000;
+var BUNGALO_PRICE = 0;
 
 var locationXMax = document.querySelector('.map__overlay').offsetWidth;
 
@@ -51,7 +57,8 @@ function getRandomElement(elements) {
 function shuffleElements(elements) {
   var mixedElements = elements.slice();
   for (var i = mixedElements.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
+    var j = getRandomNumber(0, mixedElements.length - 1);
+    Math.floor(Math.random() * (i + 1));
     var swap = mixedElements[i];
     mixedElements[i] = mixedElements[j];
     mixedElements[j] = swap;
@@ -61,8 +68,8 @@ function shuffleElements(elements) {
 
 // получение массива случайной длины Вариант-2)
 function getRandomLength(elements) {
-  var elementsCopy = shuffleElements(elements);
-  return elementsCopy.slice(0, getRandomNumber(1, elements.length - 1));
+  var elementsCopies = shuffleElements(elements);
+  return elementsCopies.slice(0, getRandomNumber(1, elements.length - 1));
 }
 
 var roomTypes = {
@@ -70,6 +77,13 @@ var roomTypes = {
   bungalo: 'Бунгало',
   house: 'Дом',
   palace: 'Дворец',
+};
+
+var roomsMinPrices = {
+  flat: FLAT_PRICE,
+  bungalo: BUNGALO_PRICE,
+  house: HOUSE_PRICE,
+  palace: PALACE_PRICE
 };
 
 var mapBlock = document.querySelector('.map');
@@ -89,7 +103,7 @@ var mapAdFormTimeOut = mapAdForm.querySelector('select[name="timeout"]');
 
 function disableElements(elements) {
   for (var i = 0; i < elements.length; i++) {
-    elements[i].setAttribute('disabled', true);
+    elements[i].setAttribute('disabled', 'disabled');
   }
 }
 
@@ -102,7 +116,7 @@ function enableElements(elements) {
 function disableActiveMode() {
   mapBlock.classList.add('map--faded');
   mapAdForm.classList.add('ad-form--disabled');
-  mapFiltersForm.setAttribute('disabled', true);
+  mapFiltersForm.setAttribute('disabled', 'disabled');
   disableElements(mapAdFormFieldsets);
 }
 
@@ -115,37 +129,37 @@ function enableActiveMode() {
   mapFiltersForm.removeAttribute('disabled');
   enableElements(mapAdFormFieldsets);
   mapAddressInput.value = getPinPosition();
-  mapAddressInput.setAttribute('disabled', true);
+  mapAddressInput.setAttribute('readonly', 'readonly');
   mapAddressInput.classList.add('ad-form--disabled');
-  mapAdFormTitle.addEventListener('invalid', validateTitle);
-  mapAdFormRoomType.addEventListener('input', validateTypeAndPrice);
+  mapAdFormTitle.addEventListener('input', validateTitle);
+  mapAdFormRoomType.addEventListener('input', setMinPrice);
   mapAdFormRoomsSelect.addEventListener('input', validateRoomsAndCapacity);
-  mapAdFormTimeIn.addEventListener('input', validateTimeIn);
-  mapAdFormTimeOut.addEventListener('input', validateTimeOut);
+  mapAdFormTimeIn.addEventListener('input', changeTimeIn);
+  mapAdFormTimeOut.addEventListener('input', changeTimeOut);
 
   placeOffers(offers);
 }
 
 // обработчики
-var mapPinMainMouseDownHandler = function (evt) {
+function mapPinMainMouseDownHandler(evt) {
   if (evt.which === 1) {
     enableActiveMode();
   }
-};
+}
 
-var mapPinMainKeyDownHandler = function (evt) {
-  if (evt.keyCode === 13) {
+function mapPinMainKeyDownHandler(evt) {
+  if (evt.keyCode === ENTER_KEY_CODE) {
     enableActiveMode();
   }
-};
+}
 
 mapPinMain.addEventListener('mousedown', mapPinMainMouseDownHandler);
 mapPinMain.addEventListener('keydown', mapPinMainKeyDownHandler);
 
 function getPinPosition() {
-  var posX = Math.round(mapPinMain.offsetTop - PHOTO_WIDTH / 2);
-  var posY = mapPinMain.offsetLeft - PIN_HEIGHT;
-  return posX + ', ' + posY;
+  var positionX = Math.round(mapPinMain.offsetLeft - PIN_WIDTH / 2);
+  var positionY = mapPinMain.offsetTop - PIN_HEIGHT;
+  return positionX + ', ' + positionY;
 }
 
 function validateRoomsAndCapacity() {
@@ -185,36 +199,16 @@ function validateTitle() {
   }
 }
 
-// не уверена насчет названия, это не валидация, может changeTypeAndPrice ?
-function validateTypeAndPrice() {
-  switch (true) {
-    case (mapAdFormRoomType.value === 'palace'):
-      mapAdFormPrice.min = '10000';
-      mapAdFormPrice.placeholder = '10000';
-      break;
-
-    case (mapAdFormRoomType.value === 'house'):
-      mapAdFormPrice.min = '5000';
-      mapAdFormPrice.placeholder = '5000';
-      break;
-
-    case (mapAdFormRoomType.value === 'flat'):
-      mapAdFormPrice.min = '1000';
-      mapAdFormPrice.placeholder = '1000';
-      break;
-
-    default:
-      mapAdFormPrice.min = '0';
-      mapAdFormPrice.placeholder = '0';
-  }
+function setMinPrice() {
+  mapAdFormPrice.min = roomsMinPrices[mapAdFormRoomType.value];
+  mapAdFormPrice.placeholder = roomsMinPrices[mapAdFormRoomType.value];
 }
 
-// changeTimeIn?
-function validateTimeIn() {
+function changeTimeIn() {
   mapAdFormTimeOut.value = mapAdFormTimeIn.value;
 }
 
-function validateTimeOut() {
+function changeTimeOut() {
   mapAdFormTimeIn.value = mapAdFormTimeOut.value;
 }
 
