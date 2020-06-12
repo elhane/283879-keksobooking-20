@@ -131,11 +131,11 @@ function enableActiveMode() {
   mapAddressInput.value = getPinPosition();
   mapAddressInput.setAttribute('readonly', 'readonly');
   mapAddressInput.classList.add('ad-form--disabled');
-  mapAdFormTitle.addEventListener('input', validateTitle);
-  mapAdFormRoomType.addEventListener('input', setMinPrice);
-  mapAdFormRoomsSelect.addEventListener('input', validateRoomsAndCapacity);
-  mapAdFormTimeIn.addEventListener('input', changeTimeIn);
-  mapAdFormTimeOut.addEventListener('input', changeTimeOut);
+  mapAdFormTitle.addEventListener('input', titleInputHandler);
+  mapAdFormRoomType.addEventListener('input', roomTypeInputHandler);
+  mapAdFormRoomsSelect.addEventListener('input', roomsSelecInputHandler);
+  mapAdFormTimeIn.addEventListener('input', timeInInputHandler);
+  mapAdFormTimeOut.addEventListener('input', timeOutInputHandler);
 
   placeOffers(offers);
 }
@@ -158,11 +158,11 @@ mapPinMain.addEventListener('keydown', mapPinMainKeyDownHandler);
 
 function getPinPosition() {
   var positionX = Math.round(mapPinMain.offsetLeft - PIN_WIDTH / 2);
-  var positionY = mapPinMain.offsetTop - PIN_HEIGHT;
+  var positionY = Math.round(mapPinMain.offsetTop - PIN_HEIGHT);
   return positionX + ', ' + positionY;
 }
 
-function validateRoomsAndCapacity() {
+function roomsSelecInputHandler() {
   switch (true) {
     case (mapAdFormRoomsSelect.value === '100' && mapAdFormCapacitySelect.value !== '0'):
       mapAdFormRoomsSelect.setCustomValidity('Для выбранного количества комнат размещение гостей невозможно');
@@ -181,7 +181,7 @@ function validateRoomsAndCapacity() {
   }
 }
 
-function validateTitle() {
+function titleInputHandler() {
   switch (true) {
     case (mapAdFormTitle.validity.tooShort):
       mapAdFormTitle.setCustomValidity('Заголовок должен состоять минимум из 30 символов');
@@ -199,16 +199,16 @@ function validateTitle() {
   }
 }
 
-function setMinPrice() {
+function roomTypeInputHandler() {
   mapAdFormPrice.min = roomsMinPrices[mapAdFormRoomType.value];
   mapAdFormPrice.placeholder = roomsMinPrices[mapAdFormRoomType.value];
 }
 
-function changeTimeIn() {
+function timeInInputHandler() {
   mapAdFormTimeOut.value = mapAdFormTimeIn.value;
 }
 
-function changeTimeOut() {
+function timeOutInputHandler() {
   mapAdFormTimeIn.value = mapAdFormTimeOut.value;
 }
 
