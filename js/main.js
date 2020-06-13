@@ -2,6 +2,7 @@
 
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
+var PIN_MAIN_AFTER_HEIGHT = 22; // вроде бы, смотрела в девтулз
 var MENU_HEIGHT = 46;
 var AVATAR_LINK = 'img/avatars/user0';
 var AVATAR_IMG_EXTENSION = '.png';
@@ -34,9 +35,6 @@ var LOCATION_X_MIN = 0;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
 
-// var KEY_CODE_ENTER = 13;
-// var KEY_CODE_ESCAPE = 27;
-
 var roomTypes = {
   flat: 'Квартира',
   bungalo: 'Бунгало',
@@ -44,14 +42,14 @@ var roomTypes = {
   palace: 'Дворец',
 };
 
-var RoomsMinPrices = {
+var RoomsMinPrice = {
   BUNGALO: 0,
   FLAT: 1000,
   HOUSE: 5000,
   PALACE: 10000
 };
 
-var KeyCodes = {
+var KeyCode = {
   ENTER: 13,
   ESCAPE: 27
 };
@@ -125,6 +123,7 @@ function disableActiveMode() {
   mapBlock.classList.add('map--faded');
   mapAdForm.classList.add('ad-form--disabled');
   mapFiltersForm.setAttribute('disabled', 'disabled');
+  mapAddressInput.value = getPinPosition(false);
   disableElements(mapAdFormFieldsets);
   disableElements(mapFiltersFormFieldsets);
 }
@@ -136,7 +135,7 @@ function enableActiveMode() {
   mapBlock.classList.remove('map--faded');
   mapAdForm.classList.remove('ad-form--disabled');
   mapFiltersForm.removeAttribute('disabled');
-  mapAddressInput.value = getPinPosition();
+  mapAddressInput.value = getPinPosition(true);
   mapAddressInput.setAttribute('readonly', 'readonly');
   mapAddressInput.classList.add('ad-form--disabled');
   mapAdFormTitle.addEventListener('input', titleInputHandler);
@@ -151,10 +150,13 @@ function enableActiveMode() {
   placeOffers(offers);
 }
 
-function getPinPosition() {
+function getPinPosition(isActiveMode) {
   var positionX = Math.round(mapPinMain.offsetLeft + mapPinMain.offsetWidth / 2);
-  var positionY = Math.round(mapPinMain.offsetTop + (mapPinMain.offsetHeight) / 2);
-  // 22 прибавить острие пина до деления? или вынести в константу
+  var positionY = Math.round(mapPinMain.offsetTop + mapPinMain.offsetHeight / 2);
+
+  if (isActiveMode) {
+    positionY = Math.round(mapPinMain.offsetTop + mapPinMain.offsetHeight / 2 + PIN_MAIN_AFTER_HEIGHT);
+  }
   return positionX + ', ' + positionY;
 }
 
@@ -169,7 +171,6 @@ function roomsSelecInputHandler() {
       break;
 
     case (mapAdFormCapacitySelect.value > mapAdFormRoomsSelect.value && mapAdFormCapacitySelect.value !== '0'):
-      // console.log(mapAdFormRoomsSelect.value, mapAdFormCapacitySelect.value);
       mapAdFormRoomsSelect.setCustomValidity('Количество комнат не должно быть меньше количества гостей');
       break;
 
@@ -197,8 +198,8 @@ function titleInputHandler() {
 }
 
 function roomTypeInputHandler() {
-  mapAdFormPrice.min = RoomsMinPrices[(mapAdFormRoomType.value).toUpperCase()];
-  mapAdFormPrice.placeholder = RoomsMinPrices[(mapAdFormRoomType.value).toUpperCase()];
+  mapAdFormPrice.min = RoomsMinPrice[(mapAdFormRoomType.value).toUpperCase()];
+  mapAdFormPrice.placeholder = RoomsMinPrice[(mapAdFormRoomType.value).toUpperCase()];
 }
 
 function timeInInputHandler() {
@@ -260,15 +261,7 @@ function renderOfferPin(offerPin) {
     closeCard();
     pinElement.classList.add('map__pin--active');
 
-    // if (pinElement.classList.contains('map__pin--active')) {
-    //   pinElement.classList.remove('map__pin--active');
-    // } else {
-    //   pinElement.classList.add('map__pin--active');
-    // }
-
     mapBlock.insertBefore(renderCard(offerPin), filterBlock);
-    var cardCloseButton = document.querySelector('.popup__close');
-    cardCloseButton.addEventListener('click', popupCloseMouseDownHandler);
     document.addEventListener('keydown', mapCardEscPressHandler);
   });
   return pinElement;
@@ -382,6 +375,8 @@ function renderCard(offerItem) {
   var cardPrice = cardElements.querySelector('.popup__text--price');
   var cardTime = cardElements.querySelector('.popup__text--time');
   var cardCapacity = cardElements.querySelector('.popup__text--capacity');
+  var cardCloseButton = cardElements.querySelector('.popup__close');
+  cardCloseButton.addEventListener('click', popupCloseMouseDownHandler);
 
   cardAvatar.src = offerItem.author.avatar;
 
@@ -433,7 +428,7 @@ function mapPinMainMouseDownHandler(evt) {
 }
 
 function mapPinMainKeyDownHandler(evt) {
-  if (evt.keyCode === KeyCodes.ENTER) {
+  if (evt.keyCode === KeyCode.ENTER) {
     enableActiveMode();
   }
 }
@@ -445,7 +440,7 @@ function popupCloseMouseDownHandler(evt) {
 }
 
 function mapCardEscPressHandler(evt) {
-  if (evt.keyCode === KeyCodes.ESCAPE) {
+  if (evt.keyCode === KeyCode.ESCAPE) {
     evt.preventDefault();
     closeCard();
   }
