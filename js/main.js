@@ -33,14 +33,52 @@ var OFFER_TITLES = [
 var LOCATION_X_MIN = 0;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
-var ENTER_KEY_CODE = 13;
 
-var PALACE_PRICE = 10000;
-var HOUSE_PRICE = 5000;
-var FLAT_PRICE = 1000;
-var BUNGALO_PRICE = 0;
+// var KEY_CODE_ENTER = 13;
+// var KEY_CODE_ESCAPE = 27;
+
+var roomTypes = {
+  flat: 'Квартира',
+  bungalo: 'Бунгало',
+  house: 'Дом',
+  palace: 'Дворец',
+};
+
+var RoomsMinPrices = {
+  BUNGALO: 0,
+  FLAT: 1000,
+  HOUSE: 5000,
+  PALACE: 10000
+};
+
+var KeyCodes = {
+  ENTER: 13,
+  ESCAPE: 27
+};
 
 var locationXMax = document.querySelector('.map__overlay').offsetWidth;
+var mapBlock = document.querySelector('.map');
+var mapPins = mapBlock.querySelector('.map__pins');
+var mapPinMain = mapBlock.querySelector('.map__pin--main');
+var mapAdForm = document.querySelector('.ad-form');
+var mapAdFormFieldsets = mapAdForm.querySelectorAll('input, select, fieldset');
+var mapFiltersForm = document.querySelector('.map__filters');
+var mapFiltersFormFieldsets = mapFiltersForm.querySelectorAll('input, select, fieldset');
+var mapAddressInput = mapAdForm.querySelector('#address');
+var mapAdFormRoomsSelect = mapAdForm.querySelector('select[name="rooms"]');
+var mapAdFormCapacitySelect = mapAdForm.querySelector('select[name="capacity"]');
+var mapAdFormTitle = mapAdForm.querySelector('input[name="title"]');
+var mapAdFormRoomType = mapAdForm.querySelector('select[name="type"]');
+var mapAdFormPrice = mapAdForm.querySelector('input[name="price"]');
+var mapAdFormTimeIn = mapAdForm.querySelector('select[name="timein"]');
+var mapAdFormTimeOut = mapAdForm.querySelector('select[name="timeout"]');
+
+var filterBlock = document.querySelector('.map__filters-container');
+
+// полчучение шаблона карточки
+var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+// шаблон метки
+var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
 // получение случайного числа
 function getRandomNumber(min, max) {
@@ -58,7 +96,6 @@ function shuffleElements(elements) {
   var mixedElements = elements.slice();
   for (var i = mixedElements.length - 1; i > 0; i--) {
     var j = getRandomNumber(0, mixedElements.length - 1);
-    Math.floor(Math.random() * (i + 1));
     var swap = mixedElements[i];
     mixedElements[i] = mixedElements[j];
     mixedElements[j] = swap;
@@ -68,38 +105,9 @@ function shuffleElements(elements) {
 
 // получение массива случайной длины Вариант-2)
 function getRandomLength(elements) {
-  var elementsCopies = shuffleElements(elements);
-  return elementsCopies.slice(0, getRandomNumber(1, elements.length - 1));
+  var shuffledElements = shuffleElements(elements);
+  return shuffledElements.slice(0, getRandomNumber(1, elements.length - 1));
 }
-
-var roomTypes = {
-  flat: 'Квартира',
-  bungalo: 'Бунгало',
-  house: 'Дом',
-  palace: 'Дворец',
-};
-
-var roomsMinPrices = {
-  flat: FLAT_PRICE,
-  bungalo: BUNGALO_PRICE,
-  house: HOUSE_PRICE,
-  palace: PALACE_PRICE
-};
-
-var mapBlock = document.querySelector('.map');
-var mapPins = mapBlock.querySelector('.map__pins');
-var mapPinMain = mapBlock.querySelector('.map__pin--main');
-var mapAdForm = document.querySelector('.ad-form');
-var mapAdFormFieldsets = mapAdForm.querySelectorAll('input, select, fieldset');
-var mapFiltersForm = document.querySelector('.map__filters');
-var mapAddressInput = mapAdForm.querySelector('#address');
-var mapAdFormRoomsSelect = mapAdForm.querySelector('select[name="rooms"]');
-var mapAdFormCapacitySelect = mapAdForm.querySelector('select[name="capacity"]');
-var mapAdFormTitle = mapAdForm.querySelector('input[name="title"]');
-var mapAdFormRoomType = mapAdForm.querySelector('select[name="type"]');
-var mapAdFormPrice = mapAdForm.querySelector('input[name="price"]');
-var mapAdFormTimeIn = mapAdForm.querySelector('select[name="timein"]');
-var mapAdFormTimeOut = mapAdForm.querySelector('select[name="timeout"]');
 
 function disableElements(elements) {
   for (var i = 0; i < elements.length; i++) {
@@ -118,6 +126,7 @@ function disableActiveMode() {
   mapAdForm.classList.add('ad-form--disabled');
   mapFiltersForm.setAttribute('disabled', 'disabled');
   disableElements(mapAdFormFieldsets);
+  disableElements(mapFiltersFormFieldsets);
 }
 
 disableActiveMode();
@@ -127,38 +136,25 @@ function enableActiveMode() {
   mapBlock.classList.remove('map--faded');
   mapAdForm.classList.remove('ad-form--disabled');
   mapFiltersForm.removeAttribute('disabled');
-  enableElements(mapAdFormFieldsets);
   mapAddressInput.value = getPinPosition();
   mapAddressInput.setAttribute('readonly', 'readonly');
   mapAddressInput.classList.add('ad-form--disabled');
   mapAdFormTitle.addEventListener('input', titleInputHandler);
   mapAdFormRoomType.addEventListener('input', roomTypeInputHandler);
   mapAdFormRoomsSelect.addEventListener('input', roomsSelecInputHandler);
+  mapAdFormCapacitySelect.addEventListener('input', roomsSelecInputHandler);
   mapAdFormTimeIn.addEventListener('input', timeInInputHandler);
   mapAdFormTimeOut.addEventListener('input', timeOutInputHandler);
+  enableElements(mapAdFormFieldsets);
+  enableElements(mapFiltersFormFieldsets);
 
   placeOffers(offers);
 }
 
-// обработчики
-function mapPinMainMouseDownHandler(evt) {
-  if (evt.which === 1) {
-    enableActiveMode();
-  }
-}
-
-function mapPinMainKeyDownHandler(evt) {
-  if (evt.keyCode === ENTER_KEY_CODE) {
-    enableActiveMode();
-  }
-}
-
-mapPinMain.addEventListener('mousedown', mapPinMainMouseDownHandler);
-mapPinMain.addEventListener('keydown', mapPinMainKeyDownHandler);
-
 function getPinPosition() {
-  var positionX = Math.round(mapPinMain.offsetLeft - PIN_WIDTH / 2);
-  var positionY = Math.round(mapPinMain.offsetTop - PIN_HEIGHT);
+  var positionX = Math.round(mapPinMain.offsetLeft + mapPinMain.offsetWidth / 2);
+  var positionY = Math.round(mapPinMain.offsetTop + (mapPinMain.offsetHeight) / 2);
+  // 22 прибавить острие пина до деления? или вынести в константу
   return positionX + ', ' + positionY;
 }
 
@@ -172,7 +168,8 @@ function roomsSelecInputHandler() {
       mapAdFormRoomsSelect.setCustomValidity('Выберите количество гостей');
       break;
 
-    case (mapAdFormRoomsSelect.value < mapAdFormCapacitySelect.value && mapAdFormCapacitySelect.value !== '0'):
+    case (mapAdFormCapacitySelect.value > mapAdFormRoomsSelect.value && mapAdFormCapacitySelect.value !== '0'):
+      // console.log(mapAdFormRoomsSelect.value, mapAdFormCapacitySelect.value);
       mapAdFormRoomsSelect.setCustomValidity('Количество комнат не должно быть меньше количества гостей');
       break;
 
@@ -200,8 +197,8 @@ function titleInputHandler() {
 }
 
 function roomTypeInputHandler() {
-  mapAdFormPrice.min = roomsMinPrices[mapAdFormRoomType.value];
-  mapAdFormPrice.placeholder = roomsMinPrices[mapAdFormRoomType.value];
+  mapAdFormPrice.min = RoomsMinPrices[(mapAdFormRoomType.value).toUpperCase()];
+  mapAdFormPrice.placeholder = RoomsMinPrices[(mapAdFormRoomType.value).toUpperCase()];
 }
 
 function timeInInputHandler() {
@@ -250,9 +247,6 @@ function generateOffers(count) {
   return offers;
 }
 
-// шаблон метки
-var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-
 // отрисовка метки объявления
 function renderOfferPin(offerPin) {
   var pinElement = pinTemplate.cloneNode(true);
@@ -262,6 +256,19 @@ function renderOfferPin(offerPin) {
   pinElement.style.left = (offerPin.location.x - PIN_WIDTH / 2) + 'px';
   pinElement.style.top = (offerPin.location.y - PIN_HEIGHT) + 'px';
 
+  pinElement.addEventListener('click', function () {
+    closeCard();
+    if (pinElement.classList.contains('map__pin--active')) {
+      pinElement.classList.remove('map__pin--active');
+    } else {
+      pinElement.classList.add('map__pin--active');
+    }
+
+    mapBlock.insertBefore(renderCard(offerPin), filterBlock);
+    var cardCloseButton = document.querySelector('.popup__close');
+    cardCloseButton.addEventListener('click', popupCloseMouseDownHandler);
+    document.addEventListener('keydown', mapCardEscPressHandler);
+  });
   return pinElement;
 }
 
@@ -270,7 +277,6 @@ function placeOffers(offers) {
   var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < offers.length; i++) {
-    // проверяем есть ли offer
     if (offers[i].offer) {
       fragment.appendChild(renderOfferPin(offers[i]));
     }
@@ -280,11 +286,6 @@ function placeOffers(offers) {
 
 // генерация объявлений
 var offers = generateOffers(OFFER_AMOUNT);
-
-// placeOffers(offers);
-
-// полчучение шаблона карточки
-var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
 // функция только для скрытия
 function hideElement(element) {
@@ -375,10 +376,12 @@ function renderCard(offerItem) {
   var cardElements = cardTemplate.cloneNode(true);
   var cardPhotos = cardElements.querySelector('.popup__photos');
   var cardFeatures = cardElements.querySelector('.popup__features');
-  //
+  var cardAvatar = cardElements.querySelector('.popup__avatar');
   var cardPrice = cardElements.querySelector('.popup__text--price');
   var cardTime = cardElements.querySelector('.popup__text--time');
   var cardCapacity = cardElements.querySelector('.popup__text--capacity');
+
+  cardAvatar.src = offerItem.author.avatar;
 
   changeTextContent(cardElements.querySelector('.popup__title'), offerItem.offer.title);
   changeTextContent(cardElements.querySelector('.popup__text--address'), offerItem.offer.address);
@@ -409,6 +412,40 @@ function renderCard(offerItem) {
   return cardElements;
 }
 
-// показ карточки первого объявления
-// var filterBlock = document.querySelector('.map__filters-container');
-// mapBlock.insertBefore(renderCard(offers[0]), filterBlock);
+function closeCard() {
+  var mapCard = mapBlock.querySelector('.map__card');
+
+  if (mapCard) {
+    mapCard.remove();
+  }
+
+  document.removeEventListener('keydown', mapCardEscPressHandler);
+}
+
+function mapPinMainMouseDownHandler(evt) {
+  if (evt.which === 1) {
+    enableActiveMode();
+  }
+}
+
+function mapPinMainKeyDownHandler(evt) {
+  if (evt.keyCode === KeyCodes.ENTER) {
+    enableActiveMode();
+  }
+}
+
+function popupCloseMouseDownHandler(evt) {
+  if (evt.which === 1) {
+    closeCard();
+  }
+}
+
+function mapCardEscPressHandler(evt) {
+  if (evt.keyCode === KeyCodes.ESCAPE) {
+    evt.preventDefault();
+    closeCard();
+  }
+}
+
+mapPinMain.addEventListener('mousedown', mapPinMainMouseDownHandler);
+mapPinMain.addEventListener('keydown', mapPinMainKeyDownHandler);
