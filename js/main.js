@@ -258,11 +258,13 @@ function renderOfferPin(offerPin) {
 
   pinElement.addEventListener('click', function () {
     closeCard();
-    if (pinElement.classList.contains('map__pin--active')) {
-      pinElement.classList.remove('map__pin--active');
-    } else {
-      pinElement.classList.add('map__pin--active');
-    }
+    pinElement.classList.add('map__pin--active');
+
+    // if (pinElement.classList.contains('map__pin--active')) {
+    //   pinElement.classList.remove('map__pin--active');
+    // } else {
+    //   pinElement.classList.add('map__pin--active');
+    // }
 
     mapBlock.insertBefore(renderCard(offerPin), filterBlock);
     var cardCloseButton = document.querySelector('.popup__close');
@@ -414,9 +416,11 @@ function renderCard(offerItem) {
 
 function closeCard() {
   var mapCard = mapBlock.querySelector('.map__card');
+  var pinActive = document.querySelector('.map__pin--active');
 
   if (mapCard) {
     mapCard.remove();
+    pinActive.classList.remove('map__pin--active');
   }
 
   document.removeEventListener('keydown', mapCardEscPressHandler);
