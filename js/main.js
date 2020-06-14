@@ -155,7 +155,7 @@ function getPinPosition(isActiveMode) {
   var positionY = Math.round(mapPinMain.offsetTop + mapPinMain.offsetHeight / 2);
 
   if (isActiveMode) {
-    positionY = Math.round(mapPinMain.offsetTop + mapPinMain.offsetHeight / 2 + PIN_MAIN_AFTER_HEIGHT);
+    positionY = Math.round(mapPinMain.offsetTop + mapPinMain.offsetHeight + PIN_MAIN_AFTER_HEIGHT);
   }
   return positionX + ', ' + positionY;
 }
