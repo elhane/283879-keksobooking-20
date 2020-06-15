@@ -2,8 +2,9 @@
 
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
-var PIN_MAIN_AFTER_HEIGHT = 22; // вроде бы, смотрела в девтулз
+var PIN_MAIN_AFTER_HEIGHT = 22;
 var MENU_HEIGHT = 46;
+
 var AVATAR_LINK = 'img/avatars/user0';
 var AVATAR_IMG_EXTENSION = '.png';
 var OFFER_AMOUNT = 8;
@@ -55,9 +56,12 @@ var KeyCode = {
 };
 
 var locationXMax = document.querySelector('.map__overlay').offsetWidth;
+
 var mapBlock = document.querySelector('.map');
 var mapPins = mapBlock.querySelector('.map__pins');
 var mapPinMain = mapBlock.querySelector('.map__pin--main');
+
+
 var mapAdForm = document.querySelector('.ad-form');
 var mapAdFormFieldsets = mapAdForm.querySelectorAll('input, select, fieldset');
 var mapFiltersForm = document.querySelector('.map__filters');
@@ -70,7 +74,6 @@ var mapAdFormRoomType = mapAdForm.querySelector('select[name="type"]');
 var mapAdFormPrice = mapAdForm.querySelector('input[name="price"]');
 var mapAdFormTimeIn = mapAdForm.querySelector('select[name="timein"]');
 var mapAdFormTimeOut = mapAdForm.querySelector('select[name="timeout"]');
-
 var filterBlock = document.querySelector('.map__filters-container');
 
 // полчучение шаблона карточки
