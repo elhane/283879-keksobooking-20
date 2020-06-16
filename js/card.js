@@ -7,6 +7,13 @@
 
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
+  var roomTypes = {
+    flat: 'Квартира',
+    bungalo: 'Бунгало',
+    house: 'Дом',
+    palace: 'Дворец',
+  };
+
   // функция только для скрытия
   function hideElement(element) {
     element.classList.add('hidden');
@@ -78,7 +85,6 @@
 
     switch (guests) {
       case 0:
-        // str = ' не для гостей';
         break;
 
       case 1:
@@ -107,7 +113,7 @@
 
     changeTextContent(cardElements.querySelector('.popup__title'), offerItem.offer.title);
     changeTextContent(cardElements.querySelector('.popup__text--address'), offerItem.offer.address);
-    changeTextContent(cardElements.querySelector('.popup__type'), window.data.roomTypes[offerItem.offer.type]);
+    changeTextContent(cardElements.querySelector('.popup__type'), roomTypes[offerItem.offer.type]);
     changeTextContent(cardElements.querySelector('.popup__description'), offerItem.offer.description);
 
     renderFeatures(cardFeatures, offerItem.offer.features);
@@ -135,6 +141,6 @@
   }
 
   window.card = {
-    renderCard: renderCard
+    render: renderCard
   };
 })();

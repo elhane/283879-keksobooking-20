@@ -2,11 +2,7 @@
 
 (function () {
 
-  var PIN_WIDTH = 50;
-  var PIN_HEIGHT = 70;
-  var PIN_MAIN_AFTER_HEIGHT = 22;
   var MENU_HEIGHT = 46;
-
   var AVATAR_LINK = 'img/avatars/user0';
   var AVATAR_IMG_EXTENSION = '.png';
   var OFFER_AMOUNT = 8;
@@ -35,20 +31,6 @@
   var LOCATION_X_MIN = 0;
   var LOCATION_Y_MIN = 130;
   var LOCATION_Y_MAX = 630;
-
-  var roomTypes = {
-    flat: 'Квартира',
-    bungalo: 'Бунгало',
-    house: 'Дом',
-    palace: 'Дворец',
-  };
-
-  var RoomsMinPrice = {
-    BUNGALO: 0,
-    FLAT: 1000,
-    HOUSE: 5000,
-    PALACE: 10000
-  };
 
   var locationXMax = document.querySelector('.map__overlay').offsetWidth;
 
@@ -123,12 +105,6 @@
   var offers = generateOffers(OFFER_AMOUNT);
 
   window.data = {
-    PIN_WIDTH: PIN_WIDTH,
-    PIN_HEIGHT: PIN_HEIGHT,
-    PIN_MAIN_AFTER_HEIGHT: PIN_MAIN_AFTER_HEIGHT,
-    roomTypes: roomTypes,
-    RoomsMinPrice: RoomsMinPrice,
     offers: offers
   };
-
 })();
