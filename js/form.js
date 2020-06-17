@@ -2,8 +2,6 @@
 
 (function () {
 
-  var PIN_MAIN_AFTER_HEIGHT = 22;
-
   var RoomsMinPrice = {
     BUNGALO: 0,
     FLAT: 1000,
@@ -12,7 +10,6 @@
   };
 
   var mapBlock = document.querySelector('.map');
-  var mapPinMain = mapBlock.querySelector('.map__pin--main');
   var filterBlock = document.querySelector('.map__filters-container');
   var mapAdForm = document.querySelector('.ad-form');
   var mapAdFormFieldsets = mapAdForm.querySelectorAll('input, select, fieldset');
@@ -26,17 +23,6 @@
   var mapAdFormPrice = mapAdForm.querySelector('input[name="price"]');
   var mapAdFormTimeIn = mapAdForm.querySelector('select[name="timein"]');
   var mapAdFormTimeOut = mapAdForm.querySelector('select[name="timeout"]');
-
-
-  function getPinPosition(isActiveMode) {
-    var positionX = Math.round(mapPinMain.offsetLeft + mapPinMain.offsetWidth / 2);
-    var positionY = Math.round(mapPinMain.offsetTop + mapPinMain.offsetHeight / 2);
-
-    if (isActiveMode) {
-      positionY = Math.round(mapPinMain.offsetTop + mapPinMain.offsetHeight + PIN_MAIN_AFTER_HEIGHT);
-    }
-    return positionX + ', ' + positionY;
-  }
 
   function roomsSelecInputHandler() {
     switch (true) {
@@ -91,7 +77,7 @@
     mapBlock.classList.add('map--faded');
     mapAdForm.classList.add('ad-form--disabled');
     mapFiltersForm.setAttribute('disabled', 'disabled');
-    mapAddressInput.value = getPinPosition(false);
+    mapAddressInput.value = window.coordination.getPinPosition(false);
     disableElements(mapAdFormFieldsets);
     disableElements(mapFiltersFormFieldsets);
   }
@@ -103,7 +89,7 @@
     mapBlock.classList.remove('map--faded');
     mapAdForm.classList.remove('ad-form--disabled');
     mapFiltersForm.removeAttribute('disabled');
-    mapAddressInput.value = getPinPosition(true);
+    mapAddressInput.value = window.coordination.getPinPosition(true);
     mapAddressInput.setAttribute('readonly', 'readonly');
     mapAddressInput.classList.add('ad-form--disabled');
     mapAdFormTitle.addEventListener('input', titleInputHandler);
@@ -129,9 +115,6 @@
   function timeOutInputHandler() {
     mapAdFormTimeIn.value = mapAdFormTimeOut.value;
   }
-
-  mapPinMain.addEventListener('mousedown', window.map.pinMainMouseDownHandler);
-  mapPinMain.addEventListener('keydown', window.map.pinMainKeyDownHandler);
 
   window.form = {
     enableActiveMode: enableActiveMode,

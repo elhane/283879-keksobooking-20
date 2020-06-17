@@ -105,6 +105,10 @@
   var offers = generateOffers(OFFER_AMOUNT);
 
   window.data = {
+    locationYMin: LOCATION_Y_MIN,
+    locationYMax: LOCATION_Y_MAX,
+    locationXMin: LOCATION_X_MIN,
+    locationXMax: locationXMax,
     offers: offers
   };
 })();
