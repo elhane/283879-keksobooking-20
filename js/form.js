@@ -15,7 +15,6 @@
   var mapAdFormFieldsets = mapAdForm.querySelectorAll('input, select, fieldset');
   var mapFiltersForm = document.querySelector('.map__filters');
   var mapFiltersFormFieldsets = mapFiltersForm.querySelectorAll('input, select, fieldset');
-  var mapAddressInput = mapAdForm.querySelector('#address');
   var mapAdFormRoomsSelect = mapAdForm.querySelector('select[name="rooms"]');
   var mapAdFormCapacitySelect = mapAdForm.querySelector('select[name="capacity"]');
   var mapAdFormTitle = mapAdForm.querySelector('input[name="title"]');
@@ -77,7 +76,7 @@
     mapBlock.classList.add('map--faded');
     mapAdForm.classList.add('ad-form--disabled');
     mapFiltersForm.setAttribute('disabled', 'disabled');
-    mapAddressInput.value = window.coordination.getPinPosition(false);
+    window.coordination.setPinPosition(false);
     disableElements(mapAdFormFieldsets);
     disableElements(mapFiltersFormFieldsets);
   }
@@ -89,9 +88,7 @@
     mapBlock.classList.remove('map--faded');
     mapAdForm.classList.remove('ad-form--disabled');
     mapFiltersForm.removeAttribute('disabled');
-    mapAddressInput.value = window.coordination.getPinPosition(true);
-    mapAddressInput.setAttribute('readonly', 'readonly');
-    mapAddressInput.classList.add('ad-form--disabled');
+    window.coordination.disableAdressInput();
     mapAdFormTitle.addEventListener('input', titleInputHandler);
     mapAdFormRoomType.addEventListener('input', roomTypeInputHandler);
     mapAdFormRoomsSelect.addEventListener('input', roomsSelecInputHandler);
