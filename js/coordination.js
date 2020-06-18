@@ -8,7 +8,7 @@
 
   function setPinPosition(isActiveMode) {
     var positionX = Math.round(mapPinMain.offsetLeft + mapPinMain.offsetWidth / 2);
-    var positionY = (isActiveMode) ? Math.round(mapPinMain.offsetTop + mapPinMain.offsetHeight + PIN_MAIN_AFTER_HEIGHT) : Math.round(mapPinMain.offsetTop + mapPinMain.offsetHeight / 2);
+    var positionY = Math.round(mapPinMain.offsetTop + ((isActiveMode) ? (mapPinMain.offsetHeight + PIN_MAIN_AFTER_HEIGHT) : (mapPinMain.offsetHeight / 2)));
 
     mapAddressInput.value = positionX + ', ' + positionY;
   }
@@ -44,14 +44,16 @@
     if (evt.keyCode === window.map.KeyCode.ENTER) {
       window.form.enableActiveMode();
     }
+    mapPinMain.removeEventListener('keydown', mapPinMainKeyDownHandler);
+    mapPinMain.removeEventListener('mousedown', mapPinMainMouseDownHandler);
   }
 
   function mapPinMainMouseDownHandler(evt) {
     if (evt.which === 1) {
       window.form.enableActiveMode();
     }
-
     mapPinMain.removeEventListener('mousedown', mapPinMainMouseDownHandler);
+    mapPinMain.removeEventListener('keydown', mapPinMainKeyDownHandler);
   }
 
   mapPinMain.addEventListener('mousedown', mapPinMainMouseDownHandler);
