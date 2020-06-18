@@ -33,18 +33,6 @@
     document.removeEventListener('keydown', mapCardEscPressHandler);
   }
 
-  function mapPinMainMouseDownHandler(evt) {
-    if (evt.which === 1) {
-      window.form.enableActiveMode();
-    }
-  }
-
-  function mapPinMainKeyDownHandler(evt) {
-    if (evt.keyCode === KeyCode.ENTER) {
-      window.form.enableActiveMode();
-    }
-  }
-
   function popupCloseMouseDownHandler(evt) {
     if (evt.which === 1) {
       closeCard();
@@ -59,8 +47,7 @@
   }
 
   window.map = {
-    pinMainMouseDownHandler: mapPinMainMouseDownHandler,
-    pinMainKeyDownHandler: mapPinMainKeyDownHandler,
+    KeyCode: KeyCode,
     popupCloseMouseDownHandler: popupCloseMouseDownHandler,
     mapCardEscPressHandler: mapCardEscPressHandler,
     closeCard: closeCard,
