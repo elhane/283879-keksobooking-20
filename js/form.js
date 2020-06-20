@@ -47,6 +47,7 @@
       case (mapAdFormTitle.validity.tooShort):
         mapAdFormTitle.setCustomValidity('Заголовок должен состоять минимум из 30 символов');
         break;
+
       case (mapAdFormTitle.validity.tooLong):
         mapAdFormTitle.setCustomValidity('Заголовок не должен превышать 100 символов');
         break;
@@ -97,7 +98,7 @@
     mapAdFormTimeOut.addEventListener('input', timeOutInputHandler);
     enableElements(mapAdFormFieldsets);
     enableElements(mapFiltersFormFieldsets);
-    window.map.placeOffers(window.data.offers);
+    window.load(window.map.successHandler, window.map.errorHandler);
   }
 
   function roomTypeInputHandler() {

@@ -9,8 +9,7 @@
 
   var mapPins = document.querySelector('.map__pins');
 
-  // добавление меток объявлений
-  function placeOffers(offers) {
+  var successHandler = function (offers) {
     var fragment = document.createDocumentFragment();
 
     for (var i = 0; i < offers.length; i++) {
@@ -19,6 +18,22 @@
       }
     }
     mapPins.appendChild(fragment);
+  };
+
+  function errorHandler(errorMessage) {
+    var messageTemplate = document.querySelector('#error').content.querySelector('.error');
+    var message = messageTemplate.cloneNode(true);
+    var messageText = message.querySelector('.error__message');
+    messageText.textContent = errorMessage;
+
+    var errorButton = document.querySelector('.error__button');
+    errorButton.addEventListener('click', errorButtonClickHandler);
+
+    document.querySelector('main').insertAdjacentHTML('afterbegin', message);
+  }
+
+  function errorButtonClickHandler() {
+    document.querySelector('div.error').remove();
   }
 
   function closeCard() {
@@ -50,7 +65,8 @@
     KeyCode: KeyCode,
     popupCloseMouseDownHandler: popupCloseMouseDownHandler,
     mapCardEscPressHandler: mapCardEscPressHandler,
+    successHandler: successHandler,
+    errorHandler: errorHandler,
     closeCard: closeCard,
-    placeOffers: placeOffers
   };
 })();
