@@ -8,6 +8,7 @@
   };
 
   var mapPins = document.querySelector('.map__pins');
+  var messageTemplate = document.querySelector('#error').content.querySelector('.error');
 
   var successHandler = function (offers) {
     var fragment = document.createDocumentFragment();
@@ -21,19 +22,34 @@
   };
 
   function errorHandler(errorMessage) {
-    var messageTemplate = document.querySelector('#error').content.querySelector('.error');
     var message = messageTemplate.cloneNode(true);
     var messageText = message.querySelector('.error__message');
     messageText.textContent = errorMessage;
 
-    var errorButton = document.querySelector('.error__button');
-    errorButton.addEventListener('click', errorButtonClickHandler);
+    document.querySelector('main').appendChild(message);
 
-    document.querySelector('main').insertAdjacentHTML('afterbegin', message);
+    var errorButton = message.querySelector('.error__button');
+    errorButton.addEventListener('click', errorButtonClickHandler);
+    document.addEventListener('keydown', errorButtonEscPressHandler);
+    document.addEventListener('click', windowClickHandler);
   }
 
   function errorButtonClickHandler() {
     document.querySelector('div.error').remove();
+  }
+
+  function errorButtonEscPressHandler(evt) {
+    if (evt.keyCode === KeyCode.ESCAPE) {
+      evt.preventDefault();
+      document.querySelector('div.error').remove();
+    }
+  }
+
+  function windowClickHandler(evt) {
+    if (evt.target === document.querySelector('div.error')) {
+      evt.preventDefault();
+      document.querySelector('div.error').remove();
+    }
   }
 
   function closeCard() {

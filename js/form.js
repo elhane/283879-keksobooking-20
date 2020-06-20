@@ -76,6 +76,7 @@
   function disableActiveMode() {
     mapBlock.classList.add('map--faded');
     mapAdForm.classList.add('ad-form--disabled');
+    filterBlock.classList.add('hidden');
     mapFiltersForm.setAttribute('disabled', 'disabled');
     window.coordination.setPinPosition(false);
     disableElements(mapAdFormFieldsets);
@@ -88,6 +89,7 @@
   function enableActiveMode() {
     mapBlock.classList.remove('map--faded');
     mapAdForm.classList.remove('ad-form--disabled');
+    filterBlock.classList.remove('hidden');
     mapFiltersForm.removeAttribute('disabled');
     window.coordination.disableAdressInput();
     mapAdFormTitle.addEventListener('input', titleInputHandler);
@@ -116,6 +118,8 @@
 
   window.form = {
     enableActiveMode: enableActiveMode,
+    enableElements: enableElements,
+    mapFiltersFormFieldsets: mapFiltersFormFieldsets,
     insertCard: function (offerPin) {
       filterBlock.before(window.card.render(offerPin));
     }
