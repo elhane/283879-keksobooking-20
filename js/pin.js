@@ -19,7 +19,7 @@
     pinElement.addEventListener('click', function () {
       window.map.closeCard();
       pinElement.classList.add('map__pin--active');
-      window.form.insertCard(offerPin);
+      window.map.insertCard(offerPin);
       document.addEventListener('keydown', window.map.mapCardEscPressHandler);
     });
     return pinElement;

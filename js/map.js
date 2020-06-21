@@ -9,6 +9,7 @@
 
   var mapPins = document.querySelector('.map__pins');
   var messageTemplate = document.querySelector('#error').content.querySelector('.error');
+  var filterBlock = document.querySelector('.map__filters-container');
 
   var successHandler = function (offers) {
     var fragment = document.createDocumentFragment();
@@ -19,6 +20,7 @@
       }
     }
     mapPins.appendChild(fragment);
+    filterBlock.classList.remove('hidden');
   };
 
   function errorHandler(errorMessage) {
@@ -34,21 +36,25 @@
     document.addEventListener('click', windowClickHandler);
   }
 
-  function errorButtonClickHandler() {
+  function removeErrorBlock() {
     document.querySelector('div.error').remove();
+  }
+
+  function errorButtonClickHandler() {
+    removeErrorBlock();
   }
 
   function errorButtonEscPressHandler(evt) {
     if (evt.keyCode === KeyCode.ESCAPE) {
       evt.preventDefault();
-      document.querySelector('div.error').remove();
+      removeErrorBlock();
     }
   }
 
   function windowClickHandler(evt) {
-    if (evt.target === document.querySelector('div.error')) {
+    if (evt.target.matches('div.error')) {
       evt.preventDefault();
-      document.querySelector('div.error').remove();
+      removeErrorBlock();
     }
   }
 
@@ -84,5 +90,9 @@
     successHandler: successHandler,
     errorHandler: errorHandler,
     closeCard: closeCard,
+    filterBlock: filterBlock,
+    insertCard: function (offerPin) {
+      filterBlock.before(window.card.render(offerPin));
+    }
   };
 })();
