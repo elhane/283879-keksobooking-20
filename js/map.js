@@ -8,9 +8,10 @@
   };
 
   var mapPins = document.querySelector('.map__pins');
+  var messageTemplate = document.querySelector('#error').content.querySelector('.error');
+  var filterBlock = document.querySelector('.map__filters-container');
 
-  // добавление меток объявлений
-  function placeOffers(offers) {
+  var successHandler = function (offers) {
     var fragment = document.createDocumentFragment();
 
     for (var i = 0; i < offers.length; i++) {
@@ -19,6 +20,42 @@
       }
     }
     mapPins.appendChild(fragment);
+    filterBlock.classList.remove('hidden');
+  };
+
+  function errorHandler(errorMessage) {
+    var message = messageTemplate.cloneNode(true);
+    var messageText = message.querySelector('.error__message');
+    messageText.textContent = errorMessage;
+
+    document.querySelector('main').appendChild(message);
+
+    var errorButton = message.querySelector('.error__button');
+    errorButton.addEventListener('click', errorButtonClickHandler);
+    document.addEventListener('keydown', errorButtonEscPressHandler);
+    document.addEventListener('click', windowClickHandler);
+  }
+
+  function removeErrorBlock() {
+    document.querySelector('div.error').remove();
+  }
+
+  function errorButtonClickHandler() {
+    removeErrorBlock();
+  }
+
+  function errorButtonEscPressHandler(evt) {
+    if (evt.keyCode === KeyCode.ESCAPE) {
+      evt.preventDefault();
+      removeErrorBlock();
+    }
+  }
+
+  function windowClickHandler(evt) {
+    if (evt.target.matches('div.error')) {
+      evt.preventDefault();
+      removeErrorBlock();
+    }
   }
 
   function closeCard() {
@@ -50,7 +87,12 @@
     KeyCode: KeyCode,
     popupCloseMouseDownHandler: popupCloseMouseDownHandler,
     mapCardEscPressHandler: mapCardEscPressHandler,
+    successHandler: successHandler,
+    errorHandler: errorHandler,
     closeCard: closeCard,
-    placeOffers: placeOffers
+    filterBlock: filterBlock,
+    insertCard: function (offerPin) {
+      filterBlock.before(window.card.render(offerPin));
+    }
   };
 })();

@@ -10,7 +10,6 @@
   };
 
   var mapBlock = document.querySelector('.map');
-  var filterBlock = document.querySelector('.map__filters-container');
   var mapAdForm = document.querySelector('.ad-form');
   var mapAdFormFieldsets = mapAdForm.querySelectorAll('input, select, fieldset');
   var mapFiltersForm = document.querySelector('.map__filters');
@@ -47,6 +46,7 @@
       case (mapAdFormTitle.validity.tooShort):
         mapAdFormTitle.setCustomValidity('Заголовок должен состоять минимум из 30 символов');
         break;
+
       case (mapAdFormTitle.validity.tooLong):
         mapAdFormTitle.setCustomValidity('Заголовок не должен превышать 100 символов');
         break;
@@ -75,6 +75,7 @@
   function disableActiveMode() {
     mapBlock.classList.add('map--faded');
     mapAdForm.classList.add('ad-form--disabled');
+    window.map.filterBlock.classList.add('hidden');
     mapFiltersForm.setAttribute('disabled', 'disabled');
     window.coordination.setPinPosition(false);
     disableElements(mapAdFormFieldsets);
@@ -97,7 +98,7 @@
     mapAdFormTimeOut.addEventListener('input', timeOutInputHandler);
     enableElements(mapAdFormFieldsets);
     enableElements(mapFiltersFormFieldsets);
-    window.map.placeOffers(window.data.offers);
+    window.load(window.map.successHandler, window.map.errorHandler);
   }
 
   function roomTypeInputHandler() {
@@ -115,8 +116,7 @@
 
   window.form = {
     enableActiveMode: enableActiveMode,
-    insertCard: function (offerPin) {
-      filterBlock.before(window.card.render(offerPin));
-    }
+    enableElements: enableElements,
+    mapFiltersFormFieldsets: mapFiltersFormFieldsets
   };
 })();
