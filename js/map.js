@@ -8,10 +8,10 @@
   };
 
   var mapPins = document.querySelector('.map__pins');
-  var messageTemplate = document.querySelector('#error').content.querySelector('.error');
+  var messageErrorTemplate = document.querySelector('#error').content.querySelector('.error');
   var filterBlock = document.querySelector('.map__filters-container');
 
-  var successHandler = function (offers) {
+  function successLoadHandler(offers) {
     var fragment = document.createDocumentFragment();
 
     for (var i = 0; i < offers.length; i++) {
@@ -21,10 +21,10 @@
     }
     mapPins.appendChild(fragment);
     filterBlock.classList.remove('hidden');
-  };
+  }
 
-  function errorHandler(errorMessage) {
-    var message = messageTemplate.cloneNode(true);
+  function errorLoadHandler(errorMessage) {
+    var message = messageErrorTemplate.cloneNode(true);
     var messageText = message.querySelector('.error__message');
     messageText.textContent = errorMessage;
 
@@ -32,29 +32,29 @@
 
     var errorButton = message.querySelector('.error__button');
     errorButton.addEventListener('click', errorButtonClickHandler);
-    document.addEventListener('keydown', errorButtonEscPressHandler);
-    document.addEventListener('click', windowClickHandler);
+    document.addEventListener('keydown', errorMessageEscPressHandler);
+    document.addEventListener('click', windowErrorClickHandler);
   }
 
-  function removeErrorBlock() {
+  function removeErrorMessageBlock() {
     document.querySelector('div.error').remove();
   }
 
   function errorButtonClickHandler() {
-    removeErrorBlock();
+    removeErrorMessageBlock();
   }
 
-  function errorButtonEscPressHandler(evt) {
+  function errorMessageEscPressHandler(evt) {
     if (evt.keyCode === KeyCode.ESCAPE) {
       evt.preventDefault();
-      removeErrorBlock();
+      removeErrorMessageBlock();
     }
   }
 
-  function windowClickHandler(evt) {
+  function windowErrorClickHandler(evt) {
     if (evt.target.matches('div.error')) {
       evt.preventDefault();
-      removeErrorBlock();
+      removeErrorMessageBlock();
     }
   }
 
@@ -87,8 +87,8 @@
     KeyCode: KeyCode,
     popupCloseMouseDownHandler: popupCloseMouseDownHandler,
     mapCardEscPressHandler: mapCardEscPressHandler,
-    successHandler: successHandler,
-    errorHandler: errorHandler,
+    successLoadHandler: successLoadHandler,
+    errorLoadHandler: errorLoadHandler,
     closeCard: closeCard,
     filterBlock: filterBlock,
     insertCard: function (offerPin) {

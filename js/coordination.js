@@ -99,6 +99,8 @@
 
   window.coordination = {
     setPinPosition: setPinPosition,
-    disableAdressInput: disableAdressInput
+    disableAdressInput: disableAdressInput,
+    mapPinMain: mapPinMain,
+    mapPinMainMouseDownHandler: mapPinMainMouseDownHandler
   };
 })();
