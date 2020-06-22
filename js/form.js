@@ -115,7 +115,7 @@
     mapAdFormTimeOut.addEventListener('input', timeOutInputHandler);
     enableElements(mapAdFormFieldsets);
     enableElements(mapFiltersFormFieldsets);
-    window.load(window.map.successLoadHandler, window.map.errorLoadHandler);
+    window.backend.loadData(window.map.successLoadHandler, window.map.errorLoadHandler);
   }
 
   function roomTypeInputHandler() {
@@ -155,8 +155,6 @@
 
   function successUploadHandler() {
     var message = messageSuccessTemplate.cloneNode(true);
-    var messageText = message.querySelector('.success__message');
-    messageText.textContent = 'Данные успешно отправлены!';
     document.querySelector('main').appendChild(message);
 
     document.addEventListener('keydown', successMessageEscPressHandler);
@@ -164,7 +162,7 @@
   }
 
   function submitHandler(evt) {
-    window.upload(new FormData(mapAdForm), successUploadHandler, window.map.errorLoadHandler);
+    window.backend.uploadData(new FormData(mapAdForm), successUploadHandler, window.map.errorLoadHandler);
     evt.preventDefault();
     disableActiveMode();
   }
