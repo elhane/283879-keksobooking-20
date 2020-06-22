@@ -72,14 +72,31 @@
     }
   }
 
+  function removeOfferPins() {
+    var offerPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+
+    for (var i = 0; i < offerPins.length; i++) {
+      offerPins[i].remove();
+    }
+  }
+
   function disableActiveMode() {
     mapBlock.classList.add('map--faded');
     mapAdForm.classList.add('ad-form--disabled');
     window.map.filterBlock.classList.add('hidden');
     mapFiltersForm.setAttribute('disabled', 'disabled');
+
+    mapAdForm.reset();
+    window.coordination.mapPinMain.style.left = '570px'; // записать в константы
+    window.coordination.mapPinMain.style.top = '375px';
+    window.map.closeCard();
+    removeOfferPins();
+    window.coordination.mapPinMain.addEventListener('mousedown', window.coordination.mapPinMainMouseDownHandler);
+
     window.coordination.setPinPosition(false);
     disableElements(mapAdFormFieldsets);
     disableElements(mapFiltersFormFieldsets);
+
   }
 
   disableActiveMode();
@@ -98,7 +115,7 @@
     mapAdFormTimeOut.addEventListener('input', timeOutInputHandler);
     enableElements(mapAdFormFieldsets);
     enableElements(mapFiltersFormFieldsets);
-    window.load(window.map.successHandler, window.map.errorHandler);
+    window.load(window.map.successLoadHandler, window.map.errorLoadHandler);
   }
 
   function roomTypeInputHandler() {
@@ -114,9 +131,54 @@
     mapAdFormTimeIn.value = mapAdFormTimeOut.value;
   }
 
+  // задание 6-3
+  var messageSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
+  var resetButton = document.querySelector('.ad-form__reset');
+
+  function removeSuccessMessageBlock() {
+    document.querySelector('div.success').remove();
+  }
+
+  function successMessageEscPressHandler(evt) {
+    if (evt.keyCode === window.map.KeyCode.ESCAPE) {
+      evt.preventDefault();
+      removeSuccessMessageBlock();
+    }
+  }
+
+  function windowSuccessClickHandler(evt) {
+    if (evt.target.matches('div.success')) {
+      evt.preventDefault();
+      removeSuccessMessageBlock();
+    }
+  }
+
+  function successUploadHandler() {
+    var message = messageSuccessTemplate.cloneNode(true);
+    var messageText = message.querySelector('.success__message');
+    messageText.textContent = 'Данные успешно отправлены!';
+    document.querySelector('main').appendChild(message);
+
+    document.addEventListener('keydown', successMessageEscPressHandler);
+    document.addEventListener('click', windowSuccessClickHandler);
+  }
+
+  function submitHandler(evt) {
+    window.upload(new FormData(mapAdForm), successUploadHandler, window.map.errorLoadHandler);
+    evt.preventDefault();
+    disableActiveMode();
+  }
+
+  function resetButtonClickHandler() {
+    disableActiveMode();
+  }
+
+  mapAdForm.addEventListener('submit', submitHandler);
+  resetButton.addEventListener('click', resetButtonClickHandler);
+
   window.form = {
     enableActiveMode: enableActiveMode,
-    enableElements: enableElements,
-    mapFiltersFormFieldsets: mapFiltersFormFieldsets
+    disableActiveMode: disableActiveMode,
+    enableElements: enableElements
   };
 })();
