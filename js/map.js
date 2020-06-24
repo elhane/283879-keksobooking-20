@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var OFFER_AMOUNT = 5;
 
   var KeyCode = {
     ENTER: 13,
@@ -12,9 +13,11 @@
   var filterBlock = document.querySelector('.map__filters-container');
 
   function successLoadHandler(offers) {
+    window.data.offersToFilter = offers; // записать все полученные с сервера объекты в массив
+
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < offers.length; i++) {
+    for (var i = 0; i < OFFER_AMOUNT; i++) {
       if (offers[i].offer) {
         fragment.appendChild(window.pin.render(offers[i]));
       }
@@ -64,7 +67,9 @@
 
     if (mapCard) {
       mapCard.remove();
-      pinActive.classList.remove('map__pin--active');
+      if (pinActive) {
+        pinActive.classList.remove('map__pin--active');
+      }
     }
 
     document.removeEventListener('keydown', mapCardEscPressHandler);
@@ -93,6 +98,8 @@
     filterBlock: filterBlock,
     insertCard: function (offerPin) {
       filterBlock.before(window.card.render(offerPin));
-    }
+    },
+    pinsBlock: mapPins,
+    offerAmount: OFFER_AMOUNT
   };
 })();

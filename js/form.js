@@ -177,6 +177,7 @@
   window.form = {
     enableActiveMode: enableActiveMode,
     disableActiveMode: disableActiveMode,
-    enableElements: enableElements
+    enableElements: enableElements,
+    removeOfferPins: removeOfferPins
   };
 })();
