@@ -3,29 +3,33 @@
 (function () {
 
   var housingTypeSelect = document.querySelector('#housing-type');
-  var anyHousingTypeValue = housingTypeSelect.value; // 'any'
+  var FILTER_SELECT_DEFAULT_VALUE = 'any';
 
   housingTypeSelect.addEventListener('change', function () {
-
-    window.form.removeOfferPins();
     window.map.closeCard();
+    window.form.removeOfferPins();
     updatePins();
   });
 
+  function filterByCount(elements, cb, count) {
+    var filteredOffers = [];
 
-  function updatePins() {
-    window.data.filteredOffers = window.data.offersToFilter.filter(function (item) {
-      return (housingTypeSelect.value !== anyHousingTypeValue) ? housingTypeSelect.value === item.offer.type : item.offer.type;
-    }).slice(0, window.map.offerAmount);
-
-    var fragment = document.createDocumentFragment();
-
-    for (var i = 0; i < window.data.filteredOffers.length; i++) {
-      if (window.data.filteredOffers[i].offer) {
-        fragment.appendChild(window.pin.render(window.data.filteredOffers[i]));
+    for (var i = 0; i < elements.length; i++) {
+      if (cb(elements[i])) {
+        filteredOffers.push(elements[i]);
+        if (filteredOffers.length === count) {
+          break;
+        }
       }
     }
-    window.map.pinsBlock.appendChild(fragment);
+    return filteredOffers;
   }
 
+  function checkByType(item) {
+    return housingTypeSelect.value === item.offer.type || housingTypeSelect.value === FILTER_SELECT_DEFAULT_VALUE;
+  }
+
+  function updatePins() {
+    window.map.insertPins(filterByCount(window.data.offersToFilter, checkByType, window.map.offerAmount));
+  }
 })();

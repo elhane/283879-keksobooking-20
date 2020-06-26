@@ -11,6 +11,7 @@
 
   var TIMEOUT_IN_MS = 10000;
 
+  //
   function load(onSuccess, onError, type, url, data) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
@@ -49,3 +50,4 @@
     uploadData: uploadData
   };
 })();
+
