@@ -23,24 +23,9 @@
     mapPins.appendChild(fragment);
   }
 
-  function collectByCount(elements, count) {
-    var offersForPins = [];
-
-    for (var i = 0; i < elements.length; i++) {
-      offersForPins.push(elements[i]);
-      if (offersForPins.length === count) {
-        break;
-      }
-    }
-    return offersForPins;
-  }
-
   function successLoadHandler(offers) {
     window.data.offersToFilter = offers;
-
-    insertPins(collectByCount(offers, OFFER_AMOUNT));
-    // insertPins(window.data.shuffleElements(offers).slice(0, OFFER_AMOUNT));
-
+    window.filter.updatePins();
     filterBlock.classList.remove('hidden');
   }
 

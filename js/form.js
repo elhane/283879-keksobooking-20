@@ -178,6 +178,7 @@
     enableActiveMode: enableActiveMode,
     disableActiveMode: disableActiveMode,
     enableElements: enableElements,
-    removeOfferPins: removeOfferPins
+    removeOfferPins: removeOfferPins,
+    mapFilters: mapFiltersForm
   };
 })();
