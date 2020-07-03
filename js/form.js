@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var PIN_START_COORD_X = '570px';
+  var PIN_START_COORD_Y = '375px';
 
   var RoomsMinPrice = {
     BUNGALO: 0,
@@ -21,6 +23,7 @@
   var mapAdFormPrice = mapAdForm.querySelector('input[name="price"]');
   var mapAdFormTimeIn = mapAdForm.querySelector('select[name="timein"]');
   var mapAdFormTimeOut = mapAdForm.querySelector('select[name="timeout"]');
+  var mapAdFormSubmitButton = mapAdForm.querySelector('.ad-form__submit');
 
   function roomsSelecInputHandler() {
     switch (true) {
@@ -85,23 +88,20 @@
     mapAdForm.classList.add('ad-form--disabled');
     window.map.filterBlock.classList.add('hidden');
     mapFiltersForm.setAttribute('disabled', 'disabled');
-
     mapAdForm.reset();
-    window.coordination.mapPinMain.style.left = '570px'; // записать в константы
-    window.coordination.mapPinMain.style.top = '375px';
+    window.coordination.mapPinMain.style.left = PIN_START_COORD_X;
+    window.coordination.mapPinMain.style.top = PIN_START_COORD_Y;
     window.map.closeCard();
     removeOfferPins();
     window.coordination.mapPinMain.addEventListener('mousedown', window.coordination.mapPinMainMouseDownHandler);
-
     window.coordination.setPinPosition(false);
     disableElements(mapAdFormFieldsets);
     disableElements(mapFiltersFormFieldsets);
-
+    mapAdFormSubmitButton.removeEventListener('click', mapAdFormSubmitButtonClickHandler);
   }
 
   disableActiveMode();
 
-  // активировать страницу
   function enableActiveMode() {
     mapBlock.classList.remove('map--faded');
     mapAdForm.classList.remove('ad-form--disabled');
@@ -115,6 +115,9 @@
     mapAdFormTimeOut.addEventListener('input', timeOutInputHandler);
     enableElements(mapAdFormFieldsets);
     enableElements(mapFiltersFormFieldsets);
+    mapAdFormSubmitButton.addEventListener('click', mapAdFormSubmitButtonClickHandler);
+    window.photo.avatarChooser.addEventListener('change', window.photo.avatarUploadHandler);
+    window.photo.housingPhotoChooser.addEventListener('change', window.photo.housingPhotoUploadHandler);
     window.backend.loadData(window.map.successLoadHandler, window.map.errorLoadHandler);
   }
 
@@ -131,7 +134,6 @@
     mapAdFormTimeIn.value = mapAdFormTimeOut.value;
   }
 
-  // задание 6-3
   var messageSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
   var resetButton = document.querySelector('.ad-form__reset');
 
@@ -165,14 +167,30 @@
     window.backend.uploadData(new FormData(mapAdForm), successUploadHandler, window.map.errorLoadHandler);
     evt.preventDefault();
     disableActiveMode();
+    window.photo.resetPhotosInputs();
   }
 
   function resetButtonClickHandler() {
     disableActiveMode();
+    window.photo.resetPhotosInputs();
   }
 
   mapAdForm.addEventListener('submit', submitHandler);
   resetButton.addEventListener('click', resetButtonClickHandler);
+
+  function validateFormInputs(formInputs) {
+    formInputs.forEach(function (item) {
+      if (!item.validity.valid) {
+        item.classList.add('form-error');
+      } else {
+        item.classList.remove('form-error');
+      }
+    });
+  }
+
+  function mapAdFormSubmitButtonClickHandler() {
+    validateFormInputs(mapAdForm.querySelectorAll('input, select'));
+  }
 
   window.form = {
     enableActiveMode: enableActiveMode,

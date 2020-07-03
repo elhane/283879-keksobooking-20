@@ -853,6 +853,10 @@ fieldset {
           box-shadow: 0 0 2px 2px #ff6547;
 }
 
+.form-error {
+  -webkit-box-shadow: 0 0 2px 2px #ff0000;
+  box-shadow: 0 0 2px 2px #ff0000;
+}
 
 /* Футер
    ========================================================================== */
