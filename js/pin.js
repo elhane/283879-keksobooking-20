@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
 
@@ -20,7 +19,7 @@
       window.map.closeCard();
       pinElement.classList.add('map__pin--active');
       window.map.insertCard(offerPin);
-      document.addEventListener('keydown', window.map.mapCardEscPressHandler);
+      document.addEventListener('keydown', window.map.cardEscPressHandler);
     });
     return pinElement;
   }

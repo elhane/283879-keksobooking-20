@@ -14,7 +14,6 @@
     palace: 'Дворец',
   };
 
-  // функция только для скрытия
   function hideElement(element) {
     element.classList.add('hidden');
   }
@@ -32,11 +31,11 @@
     container.innerHTML = '';
 
     if (features.length) {
-      for (var i = 0; i < features.length; i++) {
+      features.forEach(function (element) {
         var featureItem = document.createElement('li');
-        featureItem.classList.add('popup__feature', 'popup__feature--' + features[i]);
+        featureItem.classList.add('popup__feature', 'popup__feature--' + element);
         container.appendChild(featureItem);
-      }
+      });
     } else {
       hideElement(container);
     }
@@ -46,21 +45,20 @@
     container.innerHTML = '';
 
     if (photos.length) {
-      for (var i = 0; i < photos.length; i++) {
+      photos.forEach(function (element) {
         var photoItem = document.createElement('img');
         photoItem.classList.add('popup__photo');
-        photoItem.src = photos[i];
+        photoItem.src = element;
         photoItem.width = PHOTO_WIDTH;
         photoItem.height = PHOTO_HEIGHT;
         photoItem.alt = PHOTO_ALT;
         container.appendChild(photoItem);
-      }
+      });
     } else {
       hideElement(container);
     }
   }
 
-  // подбор правильных окончаний
   function switchRooms(rooms) {
     var str = '';
 
@@ -79,7 +77,6 @@
     return str;
   }
 
-  // подбор правильных окончаний
   function switchGuests(guests) {
     var str = '';
 
@@ -110,12 +107,10 @@
     cardCloseButton.addEventListener('click', window.map.popupCloseMouseDownHandler);
 
     cardAvatar.src = offerItem.author.avatar;
-
     changeTextContent(cardElements.querySelector('.popup__title'), offerItem.offer.title);
     changeTextContent(cardElements.querySelector('.popup__text--address'), offerItem.offer.address);
     changeTextContent(cardElements.querySelector('.popup__type'), roomTypes[offerItem.offer.type]);
     changeTextContent(cardElements.querySelector('.popup__description'), offerItem.offer.description);
-
     renderFeatures(cardFeatures, offerItem.offer.features);
     renderPhotos(cardPhotos, offerItem.offer.photos);
 

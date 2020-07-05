@@ -2,7 +2,11 @@
 
 (function () {
   var PIN_MAIN_AFTER_HEIGHT = 22;
+  var LOCATION_X_MIN = 0;
+  var LOCATION_Y_MIN = 130;
+  var LOCATION_Y_MAX = 630;
 
+  var locationXMax = document.querySelector('.map__overlay').offsetWidth;
   var mapPinMain = document.querySelector('.map__pin--main');
   var mapAddressInput = document.querySelector('#address');
 
@@ -19,10 +23,10 @@
   }
 
   var pinCoordslimits = {
-    left: window.data.locationXMin - mapPinMain.offsetWidth / 2,
-    right: window.data.locationXMax - mapPinMain.offsetWidth / 2,
-    top: window.data.locationYMin - mapPinMain.offsetHeight - PIN_MAIN_AFTER_HEIGHT,
-    bottom: window.data.locationYMax - mapPinMain.offsetHeight - PIN_MAIN_AFTER_HEIGHT
+    left: LOCATION_X_MIN - mapPinMain.offsetWidth / 2,
+    right: locationXMax - mapPinMain.offsetWidth / 2,
+    top: LOCATION_Y_MIN - mapPinMain.offsetHeight - PIN_MAIN_AFTER_HEIGHT,
+    bottom: LOCATION_Y_MAX - mapPinMain.offsetHeight - PIN_MAIN_AFTER_HEIGHT
   };
 
   function checkCoordsLimits() {
