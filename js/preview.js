@@ -2,6 +2,8 @@
 
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var HOUSING_PHOTO_WIDTH = 70;
+  var HOUSING_PHOTO_HEIGHT = 70;
 
   var avatarChooser = document.querySelector('#avatar');
   var avatarPreviewBlock = document.querySelector('.ad-form-header__preview img');
@@ -9,7 +11,7 @@
   var housingPhotoChooser = document.querySelector('#images');
   var housingPhotoPreviewBlock = document.querySelector('.ad-form__photo');
 
-  function loader(fileChooser, filePreview, callback) {
+  function loadPhoto(fileChooser, filePreview, callback) {
     var file = fileChooser.files[0];
     var fileName = file.name.toLowerCase();
 
@@ -33,8 +35,8 @@
 
   function createImageElement() {
     var photoItem = document.createElement('img');
-    photoItem.width = 70;
-    photoItem.height = 70;
+    photoItem.width = HOUSING_PHOTO_WIDTH;
+    photoItem.height = HOUSING_PHOTO_HEIGHT;
     housingPhotoPreviewBlock.appendChild(photoItem);
     return photoItem;
   }
@@ -45,18 +47,20 @@
   }
 
   function avatarUploadHandler() {
-    loader(avatarChooser, avatarPreviewBlock);
+    loadPhoto(avatarChooser, avatarPreviewBlock);
   }
 
   function housingPhotoUploadHandler() {
-    loader(housingPhotoChooser, housingPhotoChooser, createImageElement);
+    loadPhoto(housingPhotoChooser, housingPhotoChooser, createImageElement);
   }
 
-  window.photo = {
-    avatarUploadHandler: avatarUploadHandler,
-    housingPhotoUploadHandler: housingPhotoUploadHandler,
-    avatarChooser: avatarChooser,
-    housingPhotoChooser: housingPhotoChooser,
-    resetPhotosInputs: resetPhotosInputs
+  function addPhotosUploadListeners() {
+    avatarChooser.addEventListener('change', avatarUploadHandler);
+    housingPhotoChooser.addEventListener('change', housingPhotoUploadHandler);
+  }
+
+  window.preview = {
+    resetPhotosInputs: resetPhotosInputs,
+    addPhotosUploadListeners: addPhotosUploadListeners
   };
 })();

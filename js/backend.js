@@ -4,14 +4,12 @@
   var URL_POST = 'https://javascript.pages.academy/keksobooking';
   var REQUEST_GET = 'GET';
   var REQUEST_POST = 'POST';
+  var TIMEOUT_IN_MS = 10000;
 
   var StatusCode = {
     OK: 200
   };
 
-  var TIMEOUT_IN_MS = 10000;
-
-  //
   function load(onSuccess, onError, type, url, data) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
@@ -50,4 +48,3 @@
     uploadData: uploadData
   };
 })();
-

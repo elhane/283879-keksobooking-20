@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var OFFER_AMOUNT = 5;
-
   var KeyCode = {
     ENTER: 13,
     ESCAPE: 27
@@ -24,7 +22,7 @@
   }
 
   function successLoadHandler(offers) {
-    window.data.offersToFilter = offers;
+    window.map.offersToFilter = offers;
     window.filter.updatePins();
     filterBlock.classList.remove('hidden');
   }
@@ -92,7 +90,7 @@
   window.map = {
     KeyCode: KeyCode,
     popupCloseMouseDownHandler: popupCloseMouseDownHandler,
-    mapCardEscPressHandler: mapCardEscPressHandler,
+    cardEscPressHandler: mapCardEscPressHandler,
     successLoadHandler: successLoadHandler,
     errorLoadHandler: errorLoadHandler,
     closeCard: closeCard,
@@ -100,7 +98,7 @@
     insertCard: function (offerPin) {
       filterBlock.before(window.card.render(offerPin));
     },
-    offerAmount: OFFER_AMOUNT,
-    insertPins: insertPins
+    insertPins: insertPins,
+    offersToFilter: []
   };
 })();

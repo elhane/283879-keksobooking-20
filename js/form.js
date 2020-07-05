@@ -12,130 +12,124 @@
   };
 
   var mapBlock = document.querySelector('.map');
-  var mapAdForm = document.querySelector('.ad-form');
-  var mapAdFormFieldsets = mapAdForm.querySelectorAll('input, select, fieldset');
+  var adForm = document.querySelector('.ad-form');
+  var adFormFieldsets = adForm.querySelectorAll('input, select, fieldset');
   var mapFiltersForm = document.querySelector('.map__filters');
   var mapFiltersFormFieldsets = mapFiltersForm.querySelectorAll('input, select, fieldset');
-  var mapAdFormRoomsSelect = mapAdForm.querySelector('select[name="rooms"]');
-  var mapAdFormCapacitySelect = mapAdForm.querySelector('select[name="capacity"]');
-  var mapAdFormTitle = mapAdForm.querySelector('input[name="title"]');
-  var mapAdFormRoomType = mapAdForm.querySelector('select[name="type"]');
-  var mapAdFormPrice = mapAdForm.querySelector('input[name="price"]');
-  var mapAdFormTimeIn = mapAdForm.querySelector('select[name="timein"]');
-  var mapAdFormTimeOut = mapAdForm.querySelector('select[name="timeout"]');
-  var mapAdFormSubmitButton = mapAdForm.querySelector('.ad-form__submit');
+  var adFormRoomsSelect = adForm.querySelector('select[name="rooms"]');
+  var adFormCapacitySelect = adForm.querySelector('select[name="capacity"]');
+  var adFormTitle = adForm.querySelector('input[name="title"]');
+  var adFormRoomType = adForm.querySelector('select[name="type"]');
+  var adFormPrice = adForm.querySelector('input[name="price"]');
+  var adFormTimeIn = adForm.querySelector('select[name="timein"]');
+  var adFormTimeOut = adForm.querySelector('select[name="timeout"]');
+  var adFormSubmitButton = adForm.querySelector('.ad-form__submit');
+  var adFormInputs = adForm.querySelectorAll('input, select');
+  var messageSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
+  var resetButton = document.querySelector('.ad-form__reset');
 
   function roomsSelecInputHandler() {
     switch (true) {
-      case (mapAdFormRoomsSelect.value === '100' && mapAdFormCapacitySelect.value !== '0'):
-        mapAdFormRoomsSelect.setCustomValidity('Для выбранного количества комнат размещение гостей невозможно');
+      case (adFormRoomsSelect.value === '100' && adFormCapacitySelect.value !== '0'):
+        adFormRoomsSelect.setCustomValidity('Для выбранного количества комнат размещение гостей невозможно');
         break;
 
-      case (mapAdFormRoomsSelect.value !== '100' && mapAdFormCapacitySelect.value === '0'):
-        mapAdFormRoomsSelect.setCustomValidity('Выберите количество гостей');
+      case (adFormRoomsSelect.value !== '100' && adFormCapacitySelect.value === '0'):
+        adFormRoomsSelect.setCustomValidity('Выберите количество гостей');
         break;
 
-      case (mapAdFormCapacitySelect.value > mapAdFormRoomsSelect.value && mapAdFormCapacitySelect.value !== '0'):
-        mapAdFormRoomsSelect.setCustomValidity('Количество комнат не должно быть меньше количества гостей');
+      case (adFormCapacitySelect.value > adFormRoomsSelect.value && adFormCapacitySelect.value !== '0'):
+        adFormRoomsSelect.setCustomValidity('Количество комнат не должно быть меньше количества гостей');
         break;
 
       default:
-        mapAdFormRoomsSelect.setCustomValidity('');
+        adFormRoomsSelect.setCustomValidity('');
     }
   }
 
   function titleInputHandler() {
     switch (true) {
-      case (mapAdFormTitle.validity.tooShort):
-        mapAdFormTitle.setCustomValidity('Заголовок должен состоять минимум из 30 символов');
+      case (adFormTitle.validity.tooShort):
+        adFormTitle.setCustomValidity('Заголовок должен состоять минимум из 30 символов');
         break;
 
-      case (mapAdFormTitle.validity.tooLong):
-        mapAdFormTitle.setCustomValidity('Заголовок не должен превышать 100 символов');
+      case (adFormTitle.validity.tooLong):
+        adFormTitle.setCustomValidity('Заголовок не должен превышать 100 символов');
         break;
 
-      case (mapAdFormTitle.validity.valueMissing):
-        mapAdFormTitle.setCustomValidity('Обязательное поле');
+      case (adFormTitle.validity.valueMissing):
+        adFormTitle.setCustomValidity('Обязательное поле');
         break;
 
       default:
-        mapAdFormTitle.setCustomValidity('');
+        adFormTitle.setCustomValidity('');
     }
   }
 
-  function disableElements(elements) {
-    for (var i = 0; i < elements.length; i++) {
-      elements[i].setAttribute('disabled', 'disabled');
-    }
-  }
-
-  function enableElements(elements) {
-    for (var i = 0; i < elements.length; i++) {
-      elements[i].removeAttribute('disabled');
-    }
+  function disableElements(elements, isDisabled) {
+    elements.forEach(function (element) {
+      element.disabled = isDisabled;
+    });
   }
 
   function removeOfferPins() {
     var offerPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
 
-    for (var i = 0; i < offerPins.length; i++) {
-      offerPins[i].remove();
-    }
+    offerPins.forEach(function (element) {
+      element.remove();
+    });
+
   }
 
   function disableActiveMode() {
     mapBlock.classList.add('map--faded');
-    mapAdForm.classList.add('ad-form--disabled');
+    adForm.classList.add('ad-form--disabled');
     window.map.filterBlock.classList.add('hidden');
     mapFiltersForm.setAttribute('disabled', 'disabled');
-    mapAdForm.reset();
+    adForm.reset();
     window.coordination.mapPinMain.style.left = PIN_START_COORD_X;
     window.coordination.mapPinMain.style.top = PIN_START_COORD_Y;
     window.map.closeCard();
     removeOfferPins();
     window.coordination.mapPinMain.addEventListener('mousedown', window.coordination.mapPinMainMouseDownHandler);
     window.coordination.setPinPosition(false);
-    disableElements(mapAdFormFieldsets);
-    disableElements(mapFiltersFormFieldsets);
-    mapAdFormSubmitButton.removeEventListener('click', mapAdFormSubmitButtonClickHandler);
+    disableElements(adFormFieldsets, true);
+    disableElements(mapFiltersFormFieldsets, true);
+    adFormSubmitButton.removeEventListener('click', adFormSubmitButtonClickHandler);
   }
 
   disableActiveMode();
 
   function enableActiveMode() {
     mapBlock.classList.remove('map--faded');
-    mapAdForm.classList.remove('ad-form--disabled');
+    adForm.classList.remove('ad-form--disabled');
     mapFiltersForm.removeAttribute('disabled');
     window.coordination.disableAdressInput();
-    mapAdFormTitle.addEventListener('input', titleInputHandler);
-    mapAdFormRoomType.addEventListener('input', roomTypeInputHandler);
-    mapAdFormRoomsSelect.addEventListener('input', roomsSelecInputHandler);
-    mapAdFormCapacitySelect.addEventListener('input', roomsSelecInputHandler);
-    mapAdFormTimeIn.addEventListener('input', timeInInputHandler);
-    mapAdFormTimeOut.addEventListener('input', timeOutInputHandler);
-    enableElements(mapAdFormFieldsets);
-    enableElements(mapFiltersFormFieldsets);
-    mapAdFormSubmitButton.addEventListener('click', mapAdFormSubmitButtonClickHandler);
-    window.photo.avatarChooser.addEventListener('change', window.photo.avatarUploadHandler);
-    window.photo.housingPhotoChooser.addEventListener('change', window.photo.housingPhotoUploadHandler);
+    adFormTitle.addEventListener('input', titleInputHandler);
+    adFormRoomType.addEventListener('input', roomTypeInputHandler);
+    adFormRoomsSelect.addEventListener('input', roomsSelecInputHandler);
+    adFormCapacitySelect.addEventListener('input', roomsSelecInputHandler);
+    adFormTimeIn.addEventListener('input', timeInInputHandler);
+    adFormTimeOut.addEventListener('input', timeOutInputHandler);
+    disableElements(adFormFieldsets, false);
+    disableElements(mapFiltersFormFieldsets, false);
+    adFormSubmitButton.addEventListener('click', adFormSubmitButtonClickHandler);
+    window.preview.addPhotosUploadListeners();
     window.backend.loadData(window.map.successLoadHandler, window.map.errorLoadHandler);
   }
 
   function roomTypeInputHandler() {
-    mapAdFormPrice.min = RoomsMinPrice[(mapAdFormRoomType.value).toUpperCase()];
-    mapAdFormPrice.placeholder = RoomsMinPrice[(mapAdFormRoomType.value).toUpperCase()];
+    adFormPrice.min = RoomsMinPrice[(adFormRoomType.value).toUpperCase()];
+    adFormPrice.placeholder = RoomsMinPrice[(adFormRoomType.value).toUpperCase()];
   }
 
   function timeInInputHandler() {
-    mapAdFormTimeOut.value = mapAdFormTimeIn.value;
+    adFormTimeOut.value = adFormTimeIn.value;
   }
 
   function timeOutInputHandler() {
-    mapAdFormTimeIn.value = mapAdFormTimeOut.value;
+    adFormTimeIn.value = adFormTimeOut.value;
   }
-
-  var messageSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
-  var resetButton = document.querySelector('.ad-form__reset');
 
   function removeSuccessMessageBlock() {
     document.querySelector('div.success').remove();
@@ -158,44 +152,38 @@
   function successUploadHandler() {
     var message = messageSuccessTemplate.cloneNode(true);
     document.querySelector('main').appendChild(message);
-
     document.addEventListener('keydown', successMessageEscPressHandler);
     document.addEventListener('click', windowSuccessClickHandler);
   }
 
   function submitHandler(evt) {
-    window.backend.uploadData(new FormData(mapAdForm), successUploadHandler, window.map.errorLoadHandler);
+    window.backend.uploadData(new FormData(adForm), successUploadHandler, window.map.errorLoadHandler);
     evt.preventDefault();
     disableActiveMode();
-    window.photo.resetPhotosInputs();
+    window.preview.resetPhotosInputs();
   }
 
   function resetButtonClickHandler() {
     disableActiveMode();
-    window.photo.resetPhotosInputs();
+    window.preview.resetPhotosInputs();
   }
 
-  mapAdForm.addEventListener('submit', submitHandler);
+  adForm.addEventListener('submit', submitHandler);
   resetButton.addEventListener('click', resetButtonClickHandler);
 
   function validateFormInputs(formInputs) {
-    formInputs.forEach(function (item) {
-      if (!item.validity.valid) {
-        item.classList.add('form-error');
-      } else {
-        item.classList.remove('form-error');
-      }
+    formInputs.forEach(function (element) {
+      element.classList.toggle('form-error', !element.validity.valid);
     });
   }
 
-  function mapAdFormSubmitButtonClickHandler() {
-    validateFormInputs(mapAdForm.querySelectorAll('input, select'));
+  function adFormSubmitButtonClickHandler() {
+    validateFormInputs(adFormInputs);
   }
 
   window.form = {
     enableActiveMode: enableActiveMode,
     disableActiveMode: disableActiveMode,
-    enableElements: enableElements,
     removeOfferPins: removeOfferPins,
     mapFilters: mapFiltersForm
   };
