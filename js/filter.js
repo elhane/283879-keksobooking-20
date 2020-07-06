@@ -4,7 +4,7 @@
   var FILTER_SELECT_DEFAULT_VALUE = 'any';
   var OFFER_AMOUNT = 5;
 
-  var mapFiltersForm = document.querySelector('.map__filters'); //
+  var mapFiltersForm = document.querySelector('.map__filters');
   var housingTypeSelect = document.querySelector('#housing-type');
   var housingRoomSelect = document.querySelector('#housing-rooms');
   var housingPriceSelect = document.querySelector('#housing-price');

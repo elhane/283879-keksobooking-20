@@ -27,8 +27,8 @@
   var adFormInputs = adForm.querySelectorAll('input, select');
   var messageSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
   var resetButton = document.querySelector('.ad-form__reset');
-  var mapPinMain = document.querySelector('.map__pin--main'); //
-  var filterBlock = document.querySelector('.map__filters-container'); //
+  var mapPinMain = document.querySelector('.map__pin--main');
+  var filterBlock = document.querySelector('.map__filters-container');
 
   function roomsSelecInputHandler() {
     switch (true) {
@@ -80,7 +80,6 @@
     offerPins.forEach(function (element) {
       element.remove();
     });
-
   }
 
   function disableActiveMode() {
