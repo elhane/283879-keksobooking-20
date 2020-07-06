@@ -44,16 +44,16 @@
     }
   }
 
-  function mapPinMainKeyDownHandler(evt) {
-    if (evt.keyCode === window.map.KeyCode.ENTER) {
+  function mapPinMainKeyDownHandler() {
+    if (window.util.isEnterPressed) {
       window.form.enableActiveMode();
     }
     mapPinMain.removeEventListener('keydown', mapPinMainKeyDownHandler);
     mapPinMain.removeEventListener('mousedown', mapPinMainMouseDownHandler);
   }
 
-  function mapPinMainMouseDownHandler(evt) {
-    if (evt.which === 1) {
+  function mapPinMainMouseDownHandler() {
+    if (window.util.isLeftMouseDown) {
       window.form.enableActiveMode();
     }
     mapPinMain.removeEventListener('mousedown', mapPinMainMouseDownHandler);
@@ -71,7 +71,7 @@
       y: evt.clientY
     };
 
-    var mapPinMainMouseMoveHandler = function (moveEvt) {
+    function mapPinMainMouseMoveHandler(moveEvt) {
       moveEvt.preventDefault();
 
       var shift = {
@@ -89,13 +89,13 @@
 
       checkCoordsLimits();
       setPinPosition(true);
-    };
+    }
 
-    var mapPinMainMouseUpHandler = function () {
+    function mapPinMainMouseUpHandler() {
 
       document.removeEventListener('mousemove', mapPinMainMouseMoveHandler);
       document.removeEventListener('mouseup', mapPinMainMouseUpHandler);
-    };
+    }
 
     document.addEventListener('mousemove', mapPinMainMouseMoveHandler);
     document.addEventListener('mouseup', mapPinMainMouseUpHandler);
@@ -104,7 +104,6 @@
   window.coordination = {
     setPinPosition: setPinPosition,
     disableAdressInput: disableAdressInput,
-    mapPinMain: mapPinMain,
     mapPinMainMouseDownHandler: mapPinMainMouseDownHandler
   };
 })();

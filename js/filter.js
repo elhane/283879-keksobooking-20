@@ -4,6 +4,7 @@
   var FILTER_SELECT_DEFAULT_VALUE = 'any';
   var OFFER_AMOUNT = 5;
 
+  var mapFiltersForm = document.querySelector('.map__filters'); //
   var housingTypeSelect = document.querySelector('#housing-type');
   var housingRoomSelect = document.querySelector('#housing-rooms');
   var housingPriceSelect = document.querySelector('#housing-price');
@@ -24,7 +25,7 @@
     }
   };
 
-  window.form.mapFilters.addEventListener('change', window.debounce(function () {
+  mapFiltersForm.addEventListener('change', window.debounce(function () {
     window.map.closeCard();
     window.form.removeOfferPins();
     updatePins();
@@ -59,13 +60,12 @@
   function checkByPrice(element) {
     if (housingPriceSelect.value !== FILTER_SELECT_DEFAULT_VALUE) {
       return element.offer.price >= priceValues[housingPriceSelect.value].min && element.offer.price <= priceValues[housingPriceSelect.value].max;
-    } else {
-      return FILTER_SELECT_DEFAULT_VALUE;
     }
+    return FILTER_SELECT_DEFAULT_VALUE;
   }
 
   function checkFeatures(element) {
-    var checkedFeatures = Array.from(window.form.mapFilters.querySelectorAll('[type="checkbox"]:checked'));
+    var checkedFeatures = Array.from(mapFiltersForm.querySelectorAll('[type="checkbox"]:checked'));
 
     return checkedFeatures.every(function (feature) {
       return element.offer.features.includes(feature.value, 0);

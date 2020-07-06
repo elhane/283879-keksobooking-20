@@ -27,6 +27,8 @@
   var adFormInputs = adForm.querySelectorAll('input, select');
   var messageSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
   var resetButton = document.querySelector('.ad-form__reset');
+  var mapPinMain = document.querySelector('.map__pin--main'); //
+  var filterBlock = document.querySelector('.map__filters-container'); //
 
   function roomsSelecInputHandler() {
     switch (true) {
@@ -84,14 +86,15 @@
   function disableActiveMode() {
     mapBlock.classList.add('map--faded');
     adForm.classList.add('ad-form--disabled');
-    window.map.filterBlock.classList.add('hidden');
+    filterBlock.classList.add('hidden');
     mapFiltersForm.setAttribute('disabled', 'disabled');
     adForm.reset();
-    window.coordination.mapPinMain.style.left = PIN_START_COORD_X;
-    window.coordination.mapPinMain.style.top = PIN_START_COORD_Y;
+    setMinPrice();
+    mapPinMain.style.left = PIN_START_COORD_X;
+    mapPinMain.style.top = PIN_START_COORD_Y;
     window.map.closeCard();
     removeOfferPins();
-    window.coordination.mapPinMain.addEventListener('mousedown', window.coordination.mapPinMainMouseDownHandler);
+    mapPinMain.addEventListener('mousedown', window.coordination.mapPinMainMouseDownHandler);
     window.coordination.setPinPosition(false);
     disableElements(adFormFieldsets, true);
     disableElements(mapFiltersFormFieldsets, true);
@@ -119,6 +122,10 @@
   }
 
   function roomTypeInputHandler() {
+    setMinPrice();
+  }
+
+  function setMinPrice() {
     adFormPrice.min = RoomsMinPrice[(adFormRoomType.value).toUpperCase()];
     adFormPrice.placeholder = RoomsMinPrice[(adFormRoomType.value).toUpperCase()];
   }
@@ -136,7 +143,7 @@
   }
 
   function successMessageEscPressHandler(evt) {
-    if (evt.keyCode === window.map.KeyCode.ESCAPE) {
+    if (window.util.isEscPressed) {
       evt.preventDefault();
       removeSuccessMessageBlock();
     }
@@ -163,7 +170,8 @@
     window.preview.resetPhotosInputs();
   }
 
-  function resetButtonClickHandler() {
+  function resetButtonClickHandler(evt) {
+    evt.preventDefault();
     disableActiveMode();
     window.preview.resetPhotosInputs();
   }
@@ -185,6 +193,5 @@
     enableActiveMode: enableActiveMode,
     disableActiveMode: disableActiveMode,
     removeOfferPins: removeOfferPins,
-    mapFilters: mapFiltersForm
   };
 })();
