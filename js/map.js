@@ -1,10 +1,6 @@
 'use strict';
 
 (function () {
-  var KeyCode = {
-    ENTER: 13,
-    ESCAPE: 27
-  };
 
   var mapPins = document.querySelector('.map__pins');
   var messageErrorTemplate = document.querySelector('#error').content.querySelector('.error');
@@ -49,7 +45,7 @@
   }
 
   function errorMessageEscPressHandler(evt) {
-    if (evt.keyCode === KeyCode.ESCAPE) {
+    if (window.util.isEscPressed) {
       evt.preventDefault();
       removeErrorMessageBlock();
     }
@@ -74,27 +70,25 @@
     document.removeEventListener('keydown', mapCardEscPressHandler);
   }
 
-  function popupCloseMouseDownHandler(evt) {
-    if (evt.which === 1) {
+  function popupCloseMouseDownHandler() {
+    if (window.util.isLeftMouseDown) {
       closeCard();
     }
   }
 
   function mapCardEscPressHandler(evt) {
-    if (evt.keyCode === KeyCode.ESCAPE) {
+    if (window.util.isEscPressed) {
       evt.preventDefault();
       closeCard();
     }
   }
 
   window.map = {
-    KeyCode: KeyCode,
     popupCloseMouseDownHandler: popupCloseMouseDownHandler,
     cardEscPressHandler: mapCardEscPressHandler,
     successLoadHandler: successLoadHandler,
     errorLoadHandler: errorLoadHandler,
     closeCard: closeCard,
-    filterBlock: filterBlock,
     insertCard: function (offerPin) {
       filterBlock.before(window.card.render(offerPin));
     },
